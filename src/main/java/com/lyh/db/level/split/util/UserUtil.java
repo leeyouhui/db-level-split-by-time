@@ -2,6 +2,7 @@ package com.lyh.db.level.split.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class UserUtil {
 		User user = new User();
 		user.setId(UUID.randomUUID().toString());
 		user.setName("name"+new Date().getTime());
-		user.setSex(1);
+		user.setSex(111111);
 		user.setAge(24);
 		user.setTel("12346789");
 		user.setAddr("北京通州");
@@ -52,15 +53,20 @@ public class UserUtil {
 	 */
 	public static List<String> matchTableNames(Map<String, Object> param){
 		List<String> tableNames = null;
-		new Date();
 		try {
-			long startTime = new SimpleDateFormat(splitTableRule).parse(param.get("startTime").toString()).getTime();
-			long endTime = new SimpleDateFormat(splitTableRule).parse(param.get("endTime").toString()).getTime();
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(param.get("startTime").toString());
+			Date endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(param.get("endTime").toString());
+			long startTime = startDate.getTime();
+			long endTime = endDate.getTime();
 			if(startTime > endTime){
 				return null;
 			}
+			tableNames = new ArrayList<String>();
+			tableNames.add(TABLE_PREFIX + new SimpleDateFormat(splitTableRule).format(startDate));
 			
+			tableNames.add(TABLE_PREFIX + new SimpleDateFormat(splitTableRule).format(endDate));
 		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 		return tableNames;
 	}

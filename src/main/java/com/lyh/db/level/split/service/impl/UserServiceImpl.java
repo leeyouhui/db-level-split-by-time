@@ -52,4 +52,9 @@ public class UserServiceImpl implements UserService {
 		return userDao.createNewTable(tableName);
 	}
 
+	@Override
+	public int isExistsTable(String tableName) {
+		return userDao.isExistsTable(tableName);
+	}
+
 }

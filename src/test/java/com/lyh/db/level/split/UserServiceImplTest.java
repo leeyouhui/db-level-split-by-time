@@ -35,7 +35,7 @@ public class UserServiceImplTest {
 		int i = 0;
 		while(i < 5){
 			User user = UserUtil.createUser();
-			userService.insert(user);
+			System.out.println(userService.insert(user));
 			i++;
 		}
 	}
@@ -88,6 +88,11 @@ public class UserServiceImplTest {
 		System.out.println(userService.createNewTable(UserUtil.initTableName(new Date())));
 	}
 
+	@Test
+	public void isExistsTable(){
+		System.out.println(userService.isExistsTable("user000"));
+	}
+	
 	@Test
 	public void startProject() throws IOException {
 		System.err.println("------start------");

@@ -1,0 +1,14 @@
+CREATE PROCEDURE p_tb_if_exists(IN dbname VARCHAR(20),IN tablename VARCHAR(20),OUT count INT)
+BEGIN
+SET count = 0;
+IF EXISTS(SELECT 1 FROM information_schema.`TABLES` WHERE TABLE_SCHEMA = dbname AND TABLE_NAME = tablename)
+THEN
+SET count = 1;
+SELECT count;
+ELSE SELECT count;
+END IF;
+END;
+
+SET @count=0;
+CALL p_tb_if_exists('user','user_2016_06_06_19',@count);
+SELECT @count as count;

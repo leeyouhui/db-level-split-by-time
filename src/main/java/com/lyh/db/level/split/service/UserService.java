@@ -19,4 +19,6 @@ public interface UserService {
 	List<User> listPageUser(Map<String, Object> param);
 	
 	int createNewTable(String tableName);
+	
+	int isExistsTable(String tableName);
 }

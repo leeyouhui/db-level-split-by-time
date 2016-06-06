@@ -22,4 +22,6 @@ public interface UserDao {
 	List<User> listPageUser(Map<String, Object> param);
 	
 	int createNewTable(@Param("tableName")String tableName);
+	
+	int isExistsTable(@Param("tableName")String tableName);
 }
