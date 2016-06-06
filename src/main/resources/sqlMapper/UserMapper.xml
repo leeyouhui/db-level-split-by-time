@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lyh.db.level.split.dao.UserDao">
+
+	<resultMap id="BaseResultMap" type="com.lyh.db.level.split.domain.User">
+		<result column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="sex" property="sex" />
+		<result column="age" property="age" />
+		<result column="tel" property="tel" />
+		<result column="addr" property="addr" />
+		<result column="dsc" property="dsc" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+
+	<!-- 表的列 -->
+	<sql id="columns">
+		id, 
+		name,
+		sex,
+		age,
+		tel,
+		addr,
+		dsc,
+		create_time
+	</sql>
+	
+	<!-- 插入 -->
+	<insert id="insert" parameterType="User">
+		INSERT INTO ${tableName} (
+		<include refid="columns" /> 
+		)
+		VALUES
+		(
+			#{id}, 
+			#{name}, 
+			#{sex}, 
+			#{age}, 
+			#{tel}, 
+			#{addr}, 
+			#{dsc}, 
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="User">
+		delete from ${tableName} where id = #{id}
+	</delete>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="User">
+		update ${tableName} set 
+		name = #{name},
+		sex = #{sex},
+		age = #{age},
+		tel = #{tel},
+		addr = #{addr},
+		dsc = #{dsc}
+	</update>
+	
+	<!-- 查询 -->
+	<select id="selectById" parameterType="User" resultMap="BaseResultMap"> 
+		select <include refid="columns" />
+		from ${tableName}
+		where id = #{id}
+	</select>
+	
+	<!-- 分页条件 -->
+	<sql id="conditions">
+		where 1=1
+		<if test="startTime != null">
+			create_time &gt;= #{startTime}
+		</if>
+		<if test="endTime != null">
+			create_time &lt;= #{endTime}
+		</if>
+	</sql>
+	
+	<!-- 统计分页条数 -->
+	<select id="countUser" parameterType="java.util.Map">
+		select count(1) from ${tableName}
+		<include refid="conditions"/>
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="listPageUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select <include refid="columns" />
+		from ${tableName}
+		<include refid="conditions"/>
+		order by create_time dsc
+		limit #{rowIndex},#{pageSize}
+	</select>
+	
+	<!-- 创建新表 -->
+	<insert id="createNewTable" parameterType="java.lang.String">
+		create table if not exists ${tableName} (
+  		`id` varchar(36) NOT NULL,
+  		`name` varchar(20) default NULL,
+  		`sex` int(1) default NULL,
+  		`age` int(3) default NULL,
+  		`tel` varchar(23) default NULL,
+  		`addr` varchar(50) default NULL,
+  		`dsc` text,
+  		`create_time` datetime NOT NULL,
+  		PRIMARY KEY  (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+	</insert>
+</mapper>
