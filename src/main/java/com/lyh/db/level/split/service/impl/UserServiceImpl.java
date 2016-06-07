@@ -53,8 +53,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int isExistsTable(String tableName) {
-		return userDao.isExistsTable(tableName);
+	public List<String> isExistsTables(Map<String, Object> param) {
+		return userDao.isExistsTables(param);
 	}
 
 }

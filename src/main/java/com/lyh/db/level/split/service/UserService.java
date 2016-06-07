@@ -20,5 +20,5 @@ public interface UserService {
 	
 	int createNewTable(String tableName);
 	
-	int isExistsTable(String tableName);
+	List<String> isExistsTables(Map<String, Object> param);
 }

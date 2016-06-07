@@ -23,5 +23,5 @@ public interface UserDao {
 	
 	int createNewTable(@Param("tableName")String tableName);
 	
-	int isExistsTable(@Param("tableName")String tableName);
+	List<String> isExistsTables(Map<String, Object> param);
 }

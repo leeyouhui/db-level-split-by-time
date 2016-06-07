@@ -53,7 +53,8 @@
 	<!-- 更新 -->
 	<update id="update" parameterType="User">
 		update ${tableName} set
-		name = #{name},
+		name =
+		#{name},
 		sex = #{sex},
 		age = #{age},
 		tel = #{tel},
@@ -82,7 +83,7 @@
 	</sql>
 
 	<!-- 统计分页条数 -->
-	<select id="countUser" parameterType="java.util.Map">
+	<select id="countUser" parameterType="java.util.Map" resultType="java.lang.Integer">
 		select count(1) from ${tableName}
 		<include refid="conditions" />
 	</select>
@@ -94,8 +95,10 @@
 		<include refid="columns" />
 		from ${tableName}
 		<include refid="conditions" />
-		order by create_time dsc
-		limit #{rowIndex},#{pageSize}
+		order by create_time desc
+		<if test="rowIndex != null and pageSize != null">
+			limit #{rowIndex},#{pageSize}
+		</if>
 	</select>
 
 	<!-- 创建新表 -->
@@ -103,21 +106,33 @@
 		create table if not
 		exists ${tableName} (
 		`id` varchar(36) NOT NULL,
-		`name` varchar(20) default NULL,
+		`name` varchar(20)
+		default NULL,
 		`sex` int(1) default NULL,
 		`age` int(3) default NULL,
 		`tel` varchar(23) default NULL,
 		`addr` varchar(50) default NULL,
-		`dsc` text,
+		`dsc`
+		text,
 		`create_time` datetime NOT NULL,
 		PRIMARY KEY (`id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+		) ENGINE=InnoDB
+		DEFAULT CHARSET=utf8 COMMENT='用户表';
 	</insert>
 
 	<!-- 判断表是否存在 -->
-	<select id="isExistsTable" parameterType="java.lang.String" resultType="java.lang.Integer">
-		SET @count=0;
-		CALL p_tb_if_exists('user','user_2016_06_06_19',@count);
-		SELECT @count as count;
+	<select id="isExistsTables" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		SELECT DISTINCT
+		TABLE_NAME
+		FROM
+		information_schema.`TABLES`
+		WHERE
+		TABLE_SCHEMA = #{dbName}
+		<if test="tableNames != null and tableNames.size > 0">
+			<foreach collection="tableNames" item="tableName" open="AND TABLE_NAME IN ( " separator="," close=")">
+				#{tableName}
+			</foreach>
+		</if>
 	</select>
 </mapper>

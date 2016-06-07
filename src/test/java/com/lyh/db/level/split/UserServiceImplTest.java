@@ -64,12 +64,20 @@ public class UserServiceImplTest {
 
 	@Test
 	public void testListPageUser() {
+		long startTime = System.currentTimeMillis();
+		//查询参数
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("startTime", "2016-06-06 14:00:51");
-		param.put("endTime", "2016-06-06 15:38:24");
+//		param.put("startTime", "2016-06-06 13:00:51");
+		param.put("endTime", "2016-06-07 17:00:22");
 		List<User> users = new ArrayList<User>();
 		//根据时间范围匹配表名（多）
 		List<String> tableNames = UserUtil.matchTableNames(param);
+		//判断表是否存在，如果参数tableNames为空或大小为0，则返回该数据库中的所有表
+		Map<String, Object> param1 = new HashMap<String, Object>();
+		param1.put("dbName", "user");
+		param1.put("tableNames", tableNames);
+		tableNames = userService.isExistsTables(param1);
+		
 		if(tableNames != null){
 			for(String str : tableNames){
 				param.put("tableName", str);
@@ -81,6 +89,7 @@ public class UserServiceImplTest {
 		for(User user : users){
 			System.out.println(user.toString());
 		}
+		System.out.println("---------------"+(System.currentTimeMillis()-startTime) +"ms--------");
 	}
 
 	@Test
@@ -89,8 +98,20 @@ public class UserServiceImplTest {
 	}
 
 	@Test
-	public void isExistsTable(){
-		System.out.println(userService.isExistsTable("user000"));
+	public void isExistsTables(){
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("dbName", "user");
+		List<String> tableNames = new ArrayList<String>();
+		tableNames.add("user_2016_06_06_13");
+		tableNames.add("user_2016_06_06_14");
+		tableNames.add("user_2016_06_06_13");
+		tableNames.add("user_2016_06_06_15");
+		tableNames.add("user_2016_06_06_18");
+		param.put("tableNames", tableNames);
+		tableNames = userService.isExistsTables(param);
+		for(String user : tableNames){
+			System.out.println(user.toString());
+		}
 	}
 	
 	@Test
